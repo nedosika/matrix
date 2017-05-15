@@ -9,9 +9,12 @@ def clear():
 	else:
 		os.system('clear')
 	
-ROWS = 55
-COLS = 78	
-
+COLS, ROWS = shutil.get_terminal_size((0, 0))
+COLS = int(COLS/2) - 1
+#COLS = 10
+ROWS -= 1
+print(COLS , ROWS)
+time.sleep(1)
 clear()
 
 matrix = []
@@ -26,17 +29,15 @@ for r in range(COLS):
 	for c in range(2):
 		current_col[r].append([])
 
-	current_col[r][0] = random.randint(0, ROWS + ROWS) 	#Расположение светлого символа
-	current_col[r][1] = random.randint(10, ROWS) 		#Длина полоски
-		
-ROW, COLS = shutil.get_terminal_size((60, 40))
+	current_col[r][0] = random.randint(0, ROWS-10) 	#Расположение светлого символа
+	current_col[r][1] = random.randint(10, ROWS) 	#Длина полоски
 
 while (1):
 	j = 0
 	for r in range(ROWS): 				# перебираем все строки по номерам
 		for c in range(COLS): 			# в каждой строке перебираем все столбцы по номерам
 			if (j == current_col[c][0]):
-				print(termcolor.colored(matrix[r][c], 'green', attrs=['bold']), end = ' ')
+				print(termcolor.colored(matrix[r][c], 'green', attrs=['bold']), end = ' ') #bold, dark, underline, blink, reverse, concealed.
 			else:
 				if (j < current_col[c][0] and j > current_col[c][0] - current_col[c][1]):
 					print(termcolor.colored(matrix[r][c], 'green'), end = ' ')
@@ -48,13 +49,15 @@ while (1):
 	for i in range(COLS):
 		if (current_col[i][0] - current_col[c][1] > ROWS):
 			current_col[i][0] = 0
-			current_col[i][1] = random.randint(7, ROWS)
+			current_col[i][1] = random.randint(0, ROWS)
 		else:
 			current_col[i][0] += 1
 	
-	ROW, COLS = shutil.get_terminal_size((60, 40))
+	#COLS, ROWS = shutil.get_terminal_size((20, 20))
+	#ROWS -= 10
+	#COLS -= 10
 
-	time.sleep(1)
+	#time.sleep(1)
 
 	clear()
 		
