@@ -21,26 +21,30 @@ def createRndMatrix(rows, cols):
 	for row in range(rows): 					# ROW строк
 		matrix.append([]) 						# создаем пустую строку
 		for col in range(cols): 				# в каждой строке - cols элементов
-			matrix[row].append("".join(random.choice(string.digits + string.ascii_letters + string.punctuation) for x in range(1))) # добавляем очередной элемент в строку	
+			matrix[row].append("".join(random.choice(string.digits + string.ascii_letters + string.punctuation))) # добавляем очередной элемент в строку	
 	return matrix
 
-def createRndPosLS(rows, cols, lenth):
+def createRndPosLS(rows, cols, lenth, max_speed):
 	current_col = []
 
 	for row in range(cols):
 		current_col.append([])
-		for col in range(2):
+		for col in range(3):
 			current_col[row].append([])
 
 		current_col[row][0] = random.randint(0, rows) 		#Случайное расположение светлого символа
 		current_col[row][1] = random.randint(lenth, rows) 	#Минимальная длина полоски
+		current_col[row][2] = random.randint(1, max_speed)	#Максимальная скорость
 	return current_col
 	
 COLS, ROWS = shutil.get_terminal_size()	
+MIN_LENTH_STRING = 10
+MAX_SPEED_SYMBOL = 3
+DELAY = 0
 
 clear()
 matrix = createRndMatrix(ROWS, COLS)
-current_col = createRndPosLS(ROWS, COLS, 10)
+current_col = createRndPosLS(ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
 
 while(1):
 	j = 0
@@ -63,9 +67,9 @@ while(1):
 			current_col[i][0] = 0
 			current_col[i][1] = random.randint(10, ROWS)
 		else:
-			current_col[i][0] += 1
+			current_col[i][0] += current_col[i][2]
 	
-	time.sleep(0.1)
+	time.sleep(DELAY)
 	
 	
 	
