@@ -1,6 +1,4 @@
-import sys
-from time import sleep
-import shutil
+import sys, os, random, string, time, shutil, termcolor
 
 def clear():
 	if sys.platform=='win32':			#Очиска экрана в зависимости от ОС
@@ -8,48 +6,55 @@ def clear():
 	else:
 		os.system('clear')
 	
-
-
-BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
-
-#following from Python cookbook, #475186
-def has_colours(stream):
-    if not hasattr(stream, "isatty"):
-        return False
-    if not stream.isatty():
-        return False # auto color only on TTYs
-    try:
-        import curses
-        curses.setupterm()
-        return curses.tigetnum("colors") > 2
-    except:
-        # guess false in case of error
-        return False
-has_colours = has_colours(sys.stdout)
-
-
-def printout(text, colour=WHITE):
-        if has_colours:
-                seq = "\x1b[1;%dm" % (30+colour) + text + "\x1b[0m"
-                sys.stdout.write(seq)
-        else:
-                sys.stdout.write(text)
 	
 COLS, ROWS = shutil.get_terminal_size()	
+
+
+matrix = []
+
+
+for r in range(ROWS): 					# ROW строк
+    matrix.append([]) 					# создаем пустую строку
+    for c in range(COLS): 				# в каждой строке - 10 элементов
+        matrix[r].append("".join(random.choice(string.digits + string.ascii_letters + string.punctuation) for x in range(1))) # добавляем очередной элемент в строку	
+
+clear()
+
+current_col = []
+for r in range(COLS):
+	current_col.append(random.randint(0, ROWS))
+
+
 while(1):
-    #sys.stdout.write('%2s%%' % i) 
-    #sys.stdout.flush()
-    #sleep(0.1)
-    #sys.stdout.write('\b' * 3)
-	#sys.stdout.write("#" * i + "-" * (40 - i) + "]" + chr(8) * 41)
-	sys.stdout.write("#" * COLS * ROWS )
-	#sys.stdout.flush()
-	sys.stdout.write('\b' * 30)
-	sys.stdout.write("p" * 3)
+	j = 0
+	matrix_out = []
+	for r in range(ROWS): 				# перебираем все строки по номерам
+		for c in range(COLS): 			# в каждой строке перебираем все столбцы по номерам
+			if (j == current_col[c]):
+				matrix_out.append(termcolor.colored(matrix[r][c], 'green', attrs=['bold']))
+			else:
+				if (j < current_col[c]):
+					matrix_out.append(termcolor.colored(matrix[r][c], 'green'))
+				else:
+					matrix_out.append(" ")
+		j += 1
+
+	matrixString = ''
+	for row in matrix_out:
+		matrixString +=''.join([str(elem) for elem in row])
+		
+	sys.stdout.write(matrixString)
+	sys.stdout.flush()
+	sys.stdout.write('\b' * (ROWS)*COLS)
+	sys.stdout.flush()
 	
-	sleep(5)
+	for i in range(COLS):
+		if (current_col[i] > ROWS):
+			current_col[i] = 0
+		else:
+			current_col[i] += 1
 	
-	
+	#time.sleep(0.1)
 	
 	
 	
