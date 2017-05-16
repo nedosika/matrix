@@ -1,4 +1,4 @@
-#Ver. 1.0
+﻿#Ver. 1.0
 
 import sys, os, random, string, time, shutil, termcolor
 
