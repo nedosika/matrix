@@ -1,3 +1,5 @@
+#Ver. 1.0
+
 import sys, os, random, string, time, shutil, termcolor
 
 def clear():
