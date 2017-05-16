@@ -23,7 +23,7 @@ def createRndMatrix(rows, cols):
 	for row in range(rows): 								#ROW строк
 		matrix.append([]) 									#создаем пустую строку
 		for col in range(cols): 							#в каждой строке - cols элементов
-			matrix[row].append("".join(random.choice(string.digits + string.ascii_letters + string.punctuation))) # добавляем очередной элемент в строку	
+			matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation)) # добавляем очередной элемент в строку	
 	return matrix
 
 def createRndPosLS(rows, cols, lenth, max_speed):
@@ -46,11 +46,10 @@ def updateOutMatrix(matrix, rows, cols, current_col):
 		for c in range(cols): 								#В каждой строке перебираем все столбцы по номерам
 			if (j == current_col[c][0]):
 				matrix_out.append(termcolor.colored(matrix[r][c], 'green', attrs=['bold']))
+			elif (j < current_col[c][0] and j > current_col[c][0] - current_col[c][1]):
+				matrix_out.append(termcolor.colored(matrix[r][c], 'green'))
 			else:
-				if (j < current_col[c][0] and j > current_col[c][0] - current_col[c][1]):
-					matrix_out.append(termcolor.colored(matrix[r][c], 'green'))
-				else:
-					matrix_out.append(" ")
+				matrix_out.append(" ")
 		j += 1
 	return matrix_out
 	
@@ -67,18 +66,22 @@ def updateCurCol(current_col, rows, cols, lenth, max_speed):
 COLS, ROWS = shutil.get_terminal_size()	
 MIN_LENTH_STRING = 10
 MAX_SPEED_SYMBOL = 3
-DELAY = 0
+DELAY = 0.01
 
 clear()
 matrix = createRndMatrix(ROWS, COLS)
 current_col = createRndPosLS(ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
 
 while(1):
-	matrix_out = updateOutMatrix(matrix, ROWS, COLS, current_col)
-	render(matrix_out, ROWS, COLS)	
-	current_col = updateCurCol(current_col, ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
-	time.sleep(DELAY)
-	
-	
-	
+	new_cols, new_rows = shutil.get_terminal_size()
+	if (ROWS == new_rows and COLS == new_cols):
+		matrix_out = updateOutMatrix(matrix, ROWS, COLS, current_col)
+		render(matrix_out, ROWS, COLS)	
+		current_col = updateCurCol(current_col, ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
+		time.sleep(DELAY)
+	else:
+		clear()
+		COLS, ROWS = shutil.get_terminal_size()
+		matrix = createRndMatrix(ROWS, COLS)
+		current_col = createRndPosLS(ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
 	
