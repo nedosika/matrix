@@ -14,9 +14,9 @@ def render(matrix, rows, cols):
 		out_string +=''.join([str(elem) for elem in row])
 		
 	sys.stdout.write(out_string)
-	sys.stdout.flush()
+	#sys.stdout.flush()
 	sys.stdout.write('\b' * rows * cols)
-	sys.stdout.flush()
+	#sys.stdout.flush()
 
 def createRndMatrix(rows, cols):
 	matrix = []
@@ -73,8 +73,8 @@ matrix = createRndMatrix(ROWS, COLS)
 current_col = createRndPosLS(ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
 
 while(1):
-	new_cols, new_rows = shutil.get_terminal_size()
-	if (ROWS == new_rows and COLS == new_cols):
+	new_cols, new_rows = shutil.get_terminal_size()		
+	if (ROWS == new_rows and COLS == new_cols):								#Проверяем не изменился ли размер консоли
 		matrix_out = updateOutMatrix(matrix, ROWS, COLS, current_col)
 		render(matrix_out, ROWS, COLS)	
 		current_col = updateCurCol(current_col, ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
