@@ -19,44 +19,34 @@ def render(matrix, rows, cols):
 def createRndMatrix(rows, cols):
 	matrix = []
 	for row in range(rows): 					# ROW строк
-		matrix.append([]) 					# создаем пустую строку
-		for col in range(cols): 				# в каждой строке - 10 элементов
+		matrix.append([]) 						# создаем пустую строку
+		for col in range(cols): 				# в каждой строке - cols элементов
 			matrix[row].append("".join(random.choice(string.digits + string.ascii_letters + string.punctuation) for x in range(1))) # добавляем очередной элемент в строку	
 	return matrix
 
-def createRndPosLS():
+def createRndPosLS(rows, cols, lenth):
 	current_col = []
 
-	for r in range(COLS):
+	for row in range(cols):
 		current_col.append([])
-		for c in range(2):
-			current_col[r].append([])
+		for col in range(2):
+			current_col[row].append([])
 
-		current_col[r][0] = random.randint(0, ROWS) 	#Расположение светлого символа
-		current_col[r][1] = random.randint(10, ROWS) 	#Длина полоски
+		current_col[row][0] = random.randint(0, rows) 		#Случайное расположение светлого символа
+		current_col[row][1] = random.randint(lenth, rows) 	#Минимальная длина полоски
 	return current_col
-	
-clear()
 	
 COLS, ROWS = shutil.get_terminal_size()	
 
+clear()
 matrix = createRndMatrix(ROWS, COLS)
-
-current_col = []
-
-for r in range(COLS):
-	current_col.append([])
-	for c in range(2):
-		current_col[r].append([])
-
-	current_col[r][0] = random.randint(0, ROWS) 	#Расположение светлого символа
-	current_col[r][1] = random.randint(10, ROWS) 	#Длина полоски
+current_col = createRndPosLS(ROWS, COLS, 10)
 
 while(1):
 	j = 0
 	matrix_out = []
-	for r in range(ROWS): 							# перебираем все строки по номерам
-		for c in range(COLS): 						# в каждой строке перебираем все столбцы по номерам
+	for r in range(ROWS): 									#Перебираем все строки по номерам
+		for c in range(COLS): 								#В каждой строке перебираем все столбцы по номерам
 			if (j == current_col[c][0]):
 				matrix_out.append(termcolor.colored(matrix[r][c], 'green', attrs=['bold']))
 			else:
