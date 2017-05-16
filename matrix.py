@@ -1,9 +1,9 @@
-#Ver. 1.0
+﻿#Ver. 1.0
 
 import sys, os, random, string, time, shutil, termcolor
 
 def clear():
-	if sys.platform=='win32':								#Очиска экрана в зависимости от ОС
+	if sys.platform == 'win32':								#Очиска экрана в зависимости от ОС
 		os.system('cls')
 	else:
 		os.system('clear')
