@@ -5,18 +5,38 @@ def clear():
 		os.system('cls')
 	else:
 		os.system('clear')
+		
+def render(matrix, rows, cols):
+	out_string = ''
+	for row in matrix:
+		out_string +=''.join([str(elem) for elem in row])
+		
+	sys.stdout.write(out_string)
+	sys.stdout.flush()
+	sys.stdout.write('\b' * rows * cols)
+	sys.stdout.flush()
+
+def createRandomMatrix(rows, cols):
+	matrix = []
+	for row in range(rows): 					# ROW строк
+		matrix.append([]) 					# создаем пустую строку
+		for col in range(cols): 				# в каждой строке - 10 элементов
+			matrix[row].append("".join(random.choice(string.digits + string.ascii_letters + string.punctuation) for x in range(1))) # добавляем очередной элемент в строку	
+	return matrix
+
+clear()
 	
 COLS, ROWS = shutil.get_terminal_size()	
 
 matrix = []
+
 for r in range(ROWS): 					# ROW строк
     matrix.append([]) 					# создаем пустую строку
     for c in range(COLS): 				# в каждой строке - 10 элементов
         matrix[r].append("".join(random.choice(string.digits + string.ascii_letters + string.punctuation) for x in range(1))) # добавляем очередной элемент в строку	
 
-clear()
-
 current_col = []
+
 for r in range(COLS):
 	current_col.append([])
 	for c in range(2):
@@ -39,14 +59,7 @@ while(1):
 					matrix_out.append(" ")
 		j += 1
 
-	matrixString = ''
-	for row in matrix_out:
-		matrixString +=''.join([str(elem) for elem in row])
-		
-	sys.stdout.write(matrixString)
-	sys.stdout.flush()
-	sys.stdout.write('\b' * (ROWS)*COLS)
-	sys.stdout.flush()
+	render(matrix_out, ROWS, COLS)	
 	
 	for i in range(COLS):
 		if (current_col[i][0] - current_col[i][1] > ROWS):
