@@ -16,7 +16,7 @@ def render(matrix, rows, cols):
 	sys.stdout.write('\b' * rows * cols)
 	sys.stdout.flush()
 
-def createRandomMatrix(rows, cols):
+def createRndMatrix(rows, cols):
 	matrix = []
 	for row in range(rows): 					# ROW строк
 		matrix.append([]) 					# создаем пустую строку
@@ -24,16 +24,23 @@ def createRandomMatrix(rows, cols):
 			matrix[row].append("".join(random.choice(string.digits + string.ascii_letters + string.punctuation) for x in range(1))) # добавляем очередной элемент в строку	
 	return matrix
 
+def createRndPosLS():
+	current_col = []
+
+	for r in range(COLS):
+		current_col.append([])
+		for c in range(2):
+			current_col[r].append([])
+
+		current_col[r][0] = random.randint(0, ROWS) 	#Расположение светлого символа
+		current_col[r][1] = random.randint(10, ROWS) 	#Длина полоски
+	return current_col
+	
 clear()
 	
 COLS, ROWS = shutil.get_terminal_size()	
 
-matrix = []
-
-for r in range(ROWS): 					# ROW строк
-    matrix.append([]) 					# создаем пустую строку
-    for c in range(COLS): 				# в каждой строке - 10 элементов
-        matrix[r].append("".join(random.choice(string.digits + string.ascii_letters + string.punctuation) for x in range(1))) # добавляем очередной элемент в строку	
+matrix = createRndMatrix(ROWS, COLS)
 
 current_col = []
 
