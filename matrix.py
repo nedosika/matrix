@@ -10,16 +10,13 @@ DELAY = 0
 cols, rows = shutil.get_terminal_size()
 array_positions = []
 
-
 def clear():
-	#Очиска экрана в зависимости от ОС
 	if sys.platform=='win32':								
 		os.system('cls')
 	else:
 		os.system('clear')
 		
 def render(matrix):		
-	#Вывод на экран матрицы
 	i = 0
 	out_str = ""
 	for row in range(rows):
@@ -32,12 +29,11 @@ def render(matrix):
 				sys.stdout.write(" ")
 		i += 1
 	
-	sys.stdout.flush() #При дбавлении перестает быть заметен курсор)))
+	sys.stdout.flush() #При дбавлении перестает быть сильно заметен курсор)))
 	sys.stdout.write('\b' * rows * cols)
 	
 
 def generateMatrix():	
-	#Генерация матрицы
 	matrix = []
 	for row in range(rows): 								
 		matrix.append([]) 									
@@ -74,7 +70,7 @@ def loop(matrix):
 	global rows
 	global cols
 	while(1):
-		if checkResize():								#Проверяем не изменился ли размер консоли
+		if checkResize():
 			clear()
 			cols, rows = shutil.get_terminal_size()
 			matrix = generateMatrix()
