@@ -32,18 +32,14 @@ def generateRndPosLS():
 	global array_current_column
 	array_current_column = []
 	for i in range(cols):
-		array_current_column.append([])
-		
-		array_current_column[i] = dict()
+		array_current_column.append(dict())
 		array_current_column[i]['rndLightSymbol'] = random.randint(0, rows)
 		array_current_column[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
 		array_current_column[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
-
 	
 def generateOutString(matrix):
 	j = 0
 	out_str = ""
-	
 	for row in range(rows): 														#Перебираем все строки по номерам
 		for col in range(cols): 													#В каждой строке перебираем все столбцы по номерам
 			if (j == array_current_column[col]['rndLightSymbol']):
@@ -53,7 +49,6 @@ def generateOutString(matrix):
 			else:
 				out_str += " "
 		j += 1
-		
 	return out_str
 	
 def updateArrCurCol():
@@ -65,20 +60,26 @@ def updateArrCurCol():
 		else:
 			array_current_column[i]['rndLightSymbol'] += array_current_column[i]['speed']
 
+def checkResize():
+	new_cols, new_rows = shutil.get_terminal_size()	
+	if (rows == new_rows and cols == new_cols):								#Проверяем не изменился ли размер консоли
+		return False
+	else:
+		return True
+			
 def loop(matrix):
 	global rows
 	global cols
 	while(1):
-		new_cols, new_rows = shutil.get_terminal_size()	
-		if (rows == new_rows and cols == new_cols):								#Проверяем не изменился ли размер консоли
-			render(generateOutString(matrix))	
-			array_current_column = updateArrCurCol()
-			time.sleep(DELAY)
-		else:
+		if checkResize():								#Проверяем не изменился ли размер консоли
 			clear()
 			cols, rows = shutil.get_terminal_size()
 			matrix = generateMatrix()
 			array_current_column = generateRndPosLS()
+		else:
+			render(generateOutString(matrix))	
+			array_current_column = updateArrCurCol()
+			time.sleep(DELAY)
 
 clear()
 generateRndPosLS()
