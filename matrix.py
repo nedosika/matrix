@@ -16,7 +16,6 @@ def render(matrix, rows, cols):
 	sys.stdout.write(out_string)
 	#sys.stdout.flush()
 	sys.stdout.write('\b' * rows * cols)
-	#sys.stdout.flush()
 
 def createRndMatrix(rows, cols):
 	matrix = []
@@ -62,26 +61,29 @@ def updateCurCol(current_col, rows, cols, lenth, max_speed):
 		else:
 			current_col[i][0] += current_col[i][2]
 	return current_col
+
+def loop(matrix, rows, cols, min_lenth_string, max_speed_symbol, current_col):
+	while(1):
+		new_cols, new_rows = shutil.get_terminal_size()	
+		if (rows == new_rows and cols == new_cols):								#Проверяем не изменился ли размер консоли
+			matrix_out = updateOutMatrix(matrix, rows, cols, current_col)
+			render(matrix_out, rows, cols)	
+			current_col = updateCurCol(current_col, rows, cols, min_lenth_string, max_speed_symbol)
+			time.sleep(DELAY)
+		else:
+			clear()
+			cols, rows = shutil.get_terminal_size()
+			matrix = createRndMatrix(rows, cols)
+			current_col = createRndPosLS(rows, cols, min_lenth_string, max_speed_symbol)
 	
 COLS, ROWS = shutil.get_terminal_size()	
-MIN_LENTH_STRING = 10
+MIN_LENTH_STRING = 0
 MAX_SPEED_SYMBOL = 3
-DELAY = 0.01
+DELAY = 0
 
 clear()
 matrix = createRndMatrix(ROWS, COLS)
 current_col = createRndPosLS(ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
+loop(matrix, ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL, current_col)
 
-while(1):
-	new_cols, new_rows = shutil.get_terminal_size()		
-	if (ROWS == new_rows and COLS == new_cols):								#Проверяем не изменился ли размер консоли
-		matrix_out = updateOutMatrix(matrix, ROWS, COLS, current_col)
-		render(matrix_out, ROWS, COLS)	
-		current_col = updateCurCol(current_col, ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
-		time.sleep(DELAY)
-	else:
-		clear()
-		COLS, ROWS = shutil.get_terminal_size()
-		matrix = createRndMatrix(ROWS, COLS)
-		current_col = createRndPosLS(ROWS, COLS, MIN_LENTH_STRING, MAX_SPEED_SYMBOL)
 	
