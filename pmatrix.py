@@ -14,6 +14,7 @@ class Matrix():
 	
 	def __init__(self, min_lenth_string, max_speed_string, delay):
 		self.cols, self.rows = shutil.get_terminal_size()	
+		self.createArrCurCol()
 		
 	
 	def createRndMatrix(self):
@@ -36,14 +37,14 @@ class Matrix():
 				self.array_current_column[row].append([])
 
 			self.array_current_column[row][0] = random.randint(0, self.rows) 		#Случайное расположение светлого символа
-			self.array_current_column[row][1] = random.randint(self.min_lenth_string, rows) 	#Минимальная длина полоски
+			self.array_current_column[row][1] = random.randint(self.min_lenth_string, self.rows) 	#Минимальная длина полоски
 			self.array_current_column[row][2] = random.randint(1, self.max_speed_string)	#Максимальная скорость
 		
 	def updateOutMatrix(self):
 		j = 0
 		matrix_out = []
-		for r in range(rows): 									#Перебираем все строки по номерам
-			for c in range(cols): 								#В каждой строке перебираем все столбцы по номерам
+		for r in range(self.rows): 									#Перебираем все строки по номерам
+			for c in range(self.cols): 								#В каждой строке перебираем все столбцы по номерам
 				if (j == self.array_current_column[c][0]):
 					self.array_current_column.append(termcolor.colored(self.matrix[r][c], 'green', attrs=['bold']))
 				elif (j < self.array_current_column[c][0] and j > self.array_current_column[c][0] - self.array_current_column[c][1]):
@@ -55,7 +56,7 @@ class Matrix():
 	
 	def render(self):
 		out_string = ''
-		for row in updateOutMatrix():
+		for row in self.updateOutMatrix():
 			out_string +=''.join([str(elem) for elem in row])
 
 		sys.stdout.write(out_string)
@@ -65,12 +66,13 @@ class Matrix():
 		self.createRndMatrix()
 		while(True):
 			if(self.checkResize()):
-				self.render()
+				
 				pass
 			else:
+				self.render()
 				pass
-				
-			print("1")
+			
+
 	
 	def clear(self):			#Очиска экрана в зависимости от ОС
 		if sys.platform=='win32':								
