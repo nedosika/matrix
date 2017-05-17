@@ -22,7 +22,7 @@ def render(matrix):
 	for row in range(rows):
 		for col in range(cols): 													
 			if (i == array_positions[col]['rndLightSymbol']):
-				sys.stdout.write(termcolor.colored(matrix[row][col], 'green', attrs=['bold']))
+				sys.stdout.write(termcolor.colored(matrix[row][col], 'green', attrs=['bold', 'underline']))
 			elif (i < array_positions[col]['rndLightSymbol'] and i > array_positions[col]['rndLightSymbol'] - array_positions[col]['sizeString']):
 				sys.stdout.write(termcolor.colored(matrix[row][col], 'green'))
 			else:
