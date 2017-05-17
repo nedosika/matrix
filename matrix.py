@@ -33,11 +33,12 @@ def generateRndPosLS():
 	array_current_column = []
 	for i in range(cols):
 		array_current_column.append([])
-		for j in range(3):
-			array_current_column[i].append([])
-		array_current_column[i][0] = random.randint(0, rows) 									#Случайное расположение светлого символа
-		array_current_column[i][1] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING) 		#Размер полосы символов
-		array_current_column[i][2] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)		#Максимальная скорость
+		
+		array_current_column[i] = dict()
+		array_current_column[i]['rndLightSymbol'] = random.randint(0, rows)
+		array_current_column[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
+		array_current_column[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
+
 	
 def generateOutString(matrix):
 	j = 0
@@ -45,9 +46,9 @@ def generateOutString(matrix):
 	
 	for row in range(rows): 														#Перебираем все строки по номерам
 		for col in range(cols): 													#В каждой строке перебираем все столбцы по номерам
-			if (j == array_current_column[col][0]):
+			if (j == array_current_column[col]['rndLightSymbol']):
 				out_str += termcolor.colored(matrix[row][col], 'green', attrs=['bold'])
-			elif (j < array_current_column[col][0] and j > array_current_column[col][0] - array_current_column[col][1]):
+			elif (j < array_current_column[col]['rndLightSymbol'] and j > array_current_column[col]['rndLightSymbol'] - array_current_column[col]['sizeString']):
 				out_str += termcolor.colored(matrix[row][col], 'green')
 			else:
 				out_str += " "
@@ -57,12 +58,12 @@ def generateOutString(matrix):
 	
 def updateArrCurCol():
 	for i in range(cols):
-		if (array_current_column[i][0] - array_current_column[i][1] > rows):
-			array_current_column[i][0] = 0
-			array_current_column[i][1] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
-			array_current_column[i][2] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
+		if (array_current_column[i]['rndLightSymbol'] - array_current_column[i]['sizeString'] > rows):
+			array_current_column[i]['rndLightSymbol'] = 0
+			array_current_column[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
+			array_current_column[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
 		else:
-			array_current_column[i][0] += array_current_column[i][2]
+			array_current_column[i]['rndLightSymbol'] += array_current_column[i]['speed']
 
 def loop(matrix):
 	global rows
