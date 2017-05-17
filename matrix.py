@@ -8,61 +8,64 @@ MIN_SPEED_SYMBOL = 1
 DELAY = 0
 
 cols, rows = shutil.get_terminal_size()
-array_current_column = []
+array_positions = []
+
 
 def clear():
-	if sys.platform=='win32':								#Очиска экрана в зависимости от ОС
+	#Очиска экрана в зависимости от ОС
+	if sys.platform=='win32':								
 		os.system('cls')
 	else:
 		os.system('clear')
 		
-def render(out_string):
-	sys.stdout.write(out_string)
+def render(matrix):		
+	#Вывод на экран матрицы
+	i = 0
+	out_str = ""
+	for row in range(rows):
+		for col in range(cols): 													
+			if (i == array_positions[col]['rndLightSymbol']):
+				sys.stdout.write(termcolor.colored(matrix[row][col], 'green', attrs=['bold']))
+			elif (i < array_positions[col]['rndLightSymbol'] and i > array_positions[col]['rndLightSymbol'] - array_positions[col]['sizeString']):
+				sys.stdout.write(termcolor.colored(matrix[row][col], 'green'))
+			else:
+				sys.stdout.write(" ")
+		i += 1
+	
+	sys.stdout.flush() #При дбавлении перестает быть заметен курсор)))
 	sys.stdout.write('\b' * rows * cols)
+	
 
-def generateMatrix():
+def generateMatrix():	
+	#Генерация матрицы
 	matrix = []
-	for row in range(rows): 								#ROW строк
-		matrix.append([]) 									#создаем пустую строку
-		for col in range(cols): 							#в каждой строке - cols элементов
-			matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation)) # добавляем очередной элемент в строку	
+	for row in range(rows): 								
+		matrix.append([]) 									
+		for col in range(cols): 							
+			matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
 	return matrix
 
-def generateRndPosLS():
-	global array_current_column
-	array_current_column = []
+def generatePositions():
+	global array_positions
+	array_positions = []
 	for i in range(cols):
-		array_current_column.append(dict())
-		array_current_column[i]['rndLightSymbol'] = random.randint(0, rows)
-		array_current_column[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
-		array_current_column[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
+		array_positions.append(dict())
+		array_positions[i]['rndLightSymbol'] = random.randint(0, rows)
+		array_positions[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
+		array_positions[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
 	
-def generateOutString(matrix):
-	j = 0
-	out_str = ""
-	for row in range(rows): 														#Перебираем все строки по номерам
-		for col in range(cols): 													#В каждой строке перебираем все столбцы по номерам
-			if (j == array_current_column[col]['rndLightSymbol']):
-				out_str += termcolor.colored(matrix[row][col], 'green', attrs=['bold'])
-			elif (j < array_current_column[col]['rndLightSymbol'] and j > array_current_column[col]['rndLightSymbol'] - array_current_column[col]['sizeString']):
-				out_str += termcolor.colored(matrix[row][col], 'green')
-			else:
-				out_str += " "
-		j += 1
-	return out_str
-	
-def updateArrCurCol():
+def updatePositions():
 	for i in range(cols):
-		if (array_current_column[i]['rndLightSymbol'] - array_current_column[i]['sizeString'] > rows):
-			array_current_column[i]['rndLightSymbol'] = 0
-			array_current_column[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
-			array_current_column[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
+		if (array_positions[i]['rndLightSymbol'] - array_positions[i]['sizeString'] > rows):
+			array_positions[i]['rndLightSymbol'] = 0
+			array_positions[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
+			array_positions[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
 		else:
-			array_current_column[i]['rndLightSymbol'] += array_current_column[i]['speed']
+			array_positions[i]['rndLightSymbol'] += array_positions[i]['speed']
 
 def checkResize():
 	new_cols, new_rows = shutil.get_terminal_size()	
-	if (rows == new_rows and cols == new_cols):								#Проверяем не изменился ли размер консоли
+	if (rows == new_rows and cols == new_cols):
 		return False
 	else:
 		return True
@@ -75,14 +78,14 @@ def loop(matrix):
 			clear()
 			cols, rows = shutil.get_terminal_size()
 			matrix = generateMatrix()
-			array_current_column = generateRndPosLS()
+			array_positions = generatePositions()
 		else:
-			render(generateOutString(matrix))	
-			array_current_column = updateArrCurCol()
+			render(matrix)	
+			array_positions = updatePositions()
 			time.sleep(DELAY)
 
 clear()
-generateRndPosLS()
+generatePositions()
 loop(generateMatrix())
 
 
