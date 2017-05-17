@@ -1,8 +1,10 @@
 ﻿#Ver. 1.1a
 import sys, os, random, string, time, shutil, termcolor
 	
-MIN_LENTH_STRING = 0
+MIN_LENTH_STRING = 3
+MAX_LENTH_STRING = 20
 MAX_SPEED_SYMBOL = 3
+MIN_SPEED_SYMBOL = 1
 DELAY = 0
 
 cols, rows = shutil.get_terminal_size()
@@ -29,25 +31,24 @@ def generateMatrix():
 def generateRndPosLS():
 	global array_current_column
 	array_current_column = []
-	for row in range(cols):
+	for i in range(cols):
 		array_current_column.append([])
-		for col in range(3):
-			array_current_column[row].append([])
-
-		array_current_column[row][0] = random.randint(0, rows) 					#Случайное расположение светлого символа
-		array_current_column[row][1] = random.randint(MIN_LENTH_STRING, rows) 	#Минимальная длина полоски
-		array_current_column[row][2] = random.randint(1, MAX_SPEED_SYMBOL)		#Максимальная скорость
+		for j in range(3):
+			array_current_column[i].append([])
+		array_current_column[i][0] = random.randint(0, rows) 									#Случайное расположение светлого символа
+		array_current_column[i][1] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING) 		#Размер полосы символов
+		array_current_column[i][2] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)		#Максимальная скорость
 	
 def generateOutString(matrix):
 	j = 0
 	out_str = ""
 	
-	for r in range(rows): 														#Перебираем все строки по номерам
-		for c in range(cols): 													#В каждой строке перебираем все столбцы по номерам
-			if (j == array_current_column[c][0]):
-				out_str += termcolor.colored(matrix[r][c], 'green', attrs=['bold'])
-			elif (j < array_current_column[c][0] and j > array_current_column[c][0] - array_current_column[c][1]):
-				out_str += termcolor.colored(matrix[r][c], 'green')
+	for row in range(rows): 														#Перебираем все строки по номерам
+		for col in range(cols): 													#В каждой строке перебираем все столбцы по номерам
+			if (j == array_current_column[col][0]):
+				out_str += termcolor.colored(matrix[row][col], 'green', attrs=['bold'])
+			elif (j < array_current_column[col][0] and j > array_current_column[col][0] - array_current_column[col][1]):
+				out_str += termcolor.colored(matrix[row][col], 'green')
 			else:
 				out_str += " "
 		j += 1
@@ -58,8 +59,8 @@ def updateArrCurCol():
 	for i in range(cols):
 		if (array_current_column[i][0] - array_current_column[i][1] > rows):
 			array_current_column[i][0] = 0
-			array_current_column[i][1] = random.randint(MIN_LENTH_STRING, rows)
-			array_current_column[i][2] = random.randint(1, MAX_SPEED_SYMBOL)
+			array_current_column[i][1] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
+			array_current_column[i][2] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
 		else:
 			array_current_column[i][0] += array_current_column[i][2]
 
