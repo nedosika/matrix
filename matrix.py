@@ -1,18 +1,52 @@
 ﻿#Ver. 1.1a
 import sys, os, random, string, time, shutil, termcolor
 	
-class Properties():
-	posFirstSymbol = 0
-	sizeString = 0
-	speed = 0
+class Property():
+	#properties = []
+	#rows = 0
+	#cols = 0 
+	#min_lenth_string = 1
+	#max_lenth_string = 1
+	#min_speed_symbol = 1
+	#max_speed_symbol = 1
 	
-	def _init_(self, rows, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol):
+	pos_first_symbol = 0
+	size_string = 1
+	speed = 1
+	
+	def _init_(self, rows, cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol):
+		_class_.rows = rows
+		_class_.cols = cols 
+		_class_.min_lenth_string = min_lenth_string
+		_class_.max_lenth_string = max_lenth_string
+		_class_.min_speed_symbol = min_speed_symbol
+		_class_.max_speed_symbol = max_speed_symbol
+		
 		self.pos_first_symbol = random.randint(0, rows)
 		self.size_string = random.randint(min_lenth_string, max_lenth_string)
 		self.speed = random.randint(min_speed_symbol, max_speed_symbol)
 	
-
+	@classmethod
+	def generate():
+		_class_.properties = []
+		for i in range(_class_.cols):
+			_class_.properties.append( Property(
+											_class_.rows, 
+											_class_.min_lenth_string, 
+											_class_.max_lenth_string, 
+											_class_.min_speed_symbol, 
+											_class_.max_speed_symbol ) )
 	
+	@classmethod		
+	def update():
+		for property in _class_.properties:
+			if (property.pos_first_symbol - property.size_string > _class_.rows):
+				property.pos_first_symbol = 0
+				property.size_string = random.randint(_class_.min_lenth_string, _class_.max_lenth_string)
+				property.speed = random.randint(_class_.min_speed_symbol, _class_.max_speed_symbol)
+			else:
+				property.pos_first_symbol += property.speed
+				
 MIN_LENTH_STRING = 3
 MAX_LENTH_STRING = 20
 MAX_SPEED_SYMBOL = 3
