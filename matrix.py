@@ -8,7 +8,8 @@ MIN_SPEED_SYMBOL = 1
 DELAY = 0
 
 cols, rows = shutil.get_terminal_size()
-array_positions = []
+matrix = []
+matrix_properties = []
 
 def clear():
 	if sys.platform=='win32':								
@@ -16,14 +17,14 @@ def clear():
 	else:
 		os.system('clear')
 		
-def render(matrix):		
+def render():		
 	i = 0
 	out_str = ""
 	for row in range(rows):
 		for col in range(cols): 													
-			if (i == array_positions[col]['rndLightSymbol']):
+			if (i == matrix_properties[col]['posFirstSymbol']):
 				sys.stdout.write(termcolor.colored(matrix[row][col], 'green', attrs=['bold', 'underline']))
-			elif (i < array_positions[col]['rndLightSymbol'] and i > array_positions[col]['rndLightSymbol'] - array_positions[col]['sizeString']):
+			elif (i < matrix_properties[col]['posFirstSymbol'] and i > matrix_properties[col]['posFirstSymbol'] - matrix_properties[col]['sizeString']):
 				sys.stdout.write(termcolor.colored(matrix[row][col], 'green'))
 			else:
 				sys.stdout.write(" ")
@@ -31,33 +32,32 @@ def render(matrix):
 	
 	sys.stdout.flush() #При дбавлении перестает быть сильно заметен курсор)))
 	sys.stdout.write('\b' * rows * cols)
-	
 
 def generateMatrix():	
+	global matrix
 	matrix = []
 	for row in range(rows): 								
 		matrix.append([]) 									
 		for col in range(cols): 							
 			matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
-	return matrix
 
-def generatePositions():
-	global array_positions
-	array_positions = []
+def generateProperties():
+	global matrix_properties
+	matrix_properties = []
 	for i in range(cols):
-		array_positions.append(dict())
-		array_positions[i]['rndLightSymbol'] = random.randint(0, rows)
-		array_positions[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
-		array_positions[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
+		matrix_properties.append(dict())
+		matrix_properties[i]['posFirstSymbol'] = random.randint(0, rows)
+		matrix_properties[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
+		matrix_properties[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
 	
-def updatePositions():
+def updateProperties():
 	for i in range(cols):
-		if (array_positions[i]['rndLightSymbol'] - array_positions[i]['sizeString'] > rows):
-			array_positions[i]['rndLightSymbol'] = 0
-			array_positions[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
-			array_positions[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
+		if (matrix_properties[i]['posFirstSymbol'] - matrix_properties[i]['sizeString'] > rows):
+			matrix_properties[i]['posFirstSymbol'] = 0
+			matrix_properties[i]['sizeString'] = random.randint(MIN_LENTH_STRING, MAX_LENTH_STRING)
+			matrix_properties[i]['speed'] = random.randint(MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
 		else:
-			array_positions[i]['rndLightSymbol'] += array_positions[i]['speed']
+			matrix_properties[i]['posFirstSymbol'] += matrix_properties[i]['speed']
 
 def checkResize():
 	new_cols, new_rows = shutil.get_terminal_size()	
@@ -66,23 +66,25 @@ def checkResize():
 	else:
 		return True
 			
-def loop(matrix):
+def loop():
 	global rows
 	global cols
-	while(1):
+	while(rows > 5 and cols > 15):
 		if checkResize():
 			clear()
 			cols, rows = shutil.get_terminal_size()
 			matrix = generateMatrix()
-			array_positions = generatePositions()
+			matrix_properties = generateProperties()
 		else:
-			render(matrix)	
-			array_positions = updatePositions()
+			render()	
+			matrix_properties = updateProperties()
 			time.sleep(DELAY)
+	clear()
 
 clear()
-generatePositions()
-loop(generateMatrix())
+generateMatrix()
+generateProperties()
+loop()
 
 
 
