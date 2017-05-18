@@ -1,6 +1,18 @@
 ﻿#Ver. 1.1a
 import sys, os, random, string, time, shutil, termcolor
 	
+class Properties():
+	posFirstSymbol = 0
+	sizeString = 0
+	speed = 0
+	
+	def _init_(self, rows, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol):
+		self.pos_first_symbol = random.randint(0, rows)
+		self.size_string = random.randint(min_lenth_string, max_lenth_string)
+		self.speed = random.randint(min_speed_symbol, max_speed_symbol)
+	
+
+	
 MIN_LENTH_STRING = 3
 MAX_LENTH_STRING = 20
 MAX_SPEED_SYMBOL = 3
