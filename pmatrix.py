@@ -40,45 +40,47 @@ class PyMatrix():
 	def generate(rows, cols):
 		PyMatrix.rows = rows
 		PyMatrix.cols = cols
-		PyMatrix.PyMatrix = []
+		PyMatrix.matrix= []
 		for row in range(rows): 								
-			PyMatrix.PyMatrix.append([]) 									
+			PyMatrix.matrix.append([]) 									
 			for col in range(cols): 							
-				PyMatrix.PyMatrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
+				PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
 				
 	@staticmethod			
 	def render(properties):		
 		for row in range(PyMatrix.rows):
 			for col in range(PyMatrix.cols): 													
 				if row == properties[col].pos_first_symbol:
-					sys.stdout.write( termcolor.colored( PyMatrix.PyMatrix[row][col], 'green', attrs=['bold', 'underline'] ) )
+					sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green', attrs=['bold', 'underline'] ) )
 				elif row < properties[col].pos_first_symbol and row > properties[col].pos_first_symbol - properties[col].size_string:
-					sys.stdout.write( termcolor.colored( PyMatrix.PyMatrix[row][col], 'green' ) )
+					sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green' ) )
 				else:
 					sys.stdout.write( " " )
 
 		sys.stdout.flush() #При дбавлении перестает быть сильно заметен курсор)))
 		sys.stdout.write('\b' * rows * cols)
+	
+	@staticmethod
+	def clear():
+		if sys.platform=='win32':								
+			os.system('cls')
+		else:
+			os.system('clear')
 
-def clear():
-	if sys.platform=='win32':								
-		os.system('cls')
-	else:
-		os.system('clear')
-
-def checkResize():
-	new_cols, new_rows = shutil.get_terminal_size()	
-	if (rows == new_rows and cols == new_cols):
-		return False
-	else:
-		return True
+	@staticmethod
+	def checkResize():
+		new_cols, new_rows = shutil.get_terminal_size()	
+		if (rows == new_rows and cols == new_cols):
+			return False
+		else:
+			return True
 			
 def loop():
 	global rows
 	global cols
 	while(rows > 5 and cols > 15):
-		if checkResize():
-			clear()
+		if PyMatrix.checkResize():
+			PyMatrix.clear()
 			cols, rows = shutil.get_terminal_size()
 			PyMatrix.generate(rows, cols)
 			Property.generate(rows, cols, MIN_LENTH_STRING, MAX_LENTH_STRING, MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
@@ -86,7 +88,7 @@ def loop():
 			PyMatrix.render(Property.properties)	
 			Property.update()
 			time.sleep(DELAY)
-	clear()
+	PyMatrix.clear()
 
 MIN_LENTH_STRING = 3
 MAX_LENTH_STRING = 20
@@ -95,7 +97,7 @@ MIN_SPEED_SYMBOL = 1
 DELAY = 0
 
 cols, rows = shutil.get_terminal_size()
-clear()
+PyMatrix.clear()
 PyMatrix.generate(rows, cols)
 Property.generate(rows, cols, MIN_LENTH_STRING, MAX_LENTH_STRING, MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
 loop()
