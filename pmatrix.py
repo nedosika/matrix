@@ -1,39 +1,12 @@
-﻿#Ver. 1.2a
+﻿#Ver. 1.3a
 import sys, os, random, string, time, shutil, termcolor
 	
 class Property():
-	pos_first_symbol = 0
-	size_string = 1
-	speed = 1
-	
 	def __init__( self, rows, cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol ):
-		Property.rows = rows
-		Property.cols = cols 
-		Property.min_lenth_string = min_lenth_string
-		Property.max_lenth_string = max_lenth_string
-		Property.min_speed_symbol = min_speed_symbol
-		Property.max_speed_symbol = max_speed_symbol
-		
 		self.pos_first_symbol = random.randint( -(rows), -10)
 		self.size_string = random.randint( min_lenth_string, max_lenth_string )
 		self.speed = random.randint( min_speed_symbol, max_speed_symbol )
 	
-	@staticmethod
-	def generate( rows, cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol ):
-		Property.properties = []
-		for i in range( cols ):
-			Property.properties.append( Property( rows, cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol ) )
-	
-	@staticmethod		
-	def update():
-		for property in Property.properties:
-			if property.pos_first_symbol - property.size_string > Property.rows:
-				property.pos_first_symbol = 0
-				property.size_string = random.randint( Property.min_lenth_string, Property.max_lenth_string )
-				property.speed = random.randint( Property.min_speed_symbol, Property.max_speed_symbol )
-			else:
-				property.pos_first_symbol += property.speed
-
 class PyMatrix():
 	rows = 0
 	cols = 0
@@ -41,11 +14,11 @@ class PyMatrix():
 	max_lenth_string = 20
 	min_speed_symbol = 1
 	max_speed_symbol = 3
-	delay = 0.4 
+	delay = 0
 
 	@staticmethod			
 	def render():
-		properties = Property.properties
+		properties = PyMatrix.properties
 		for row in range(PyMatrix.rows):
 			for col in range(PyMatrix.cols): 													
 				if row == properties[col].pos_first_symbol:
@@ -71,6 +44,17 @@ class PyMatrix():
 		else:
 			return True
 			
+	@staticmethod		
+	def update():
+		for property in PyMatrix.properties:
+			if property.pos_first_symbol - property.size_string > PyMatrix.rows:
+				property.pos_first_symbol = 0
+				property.size_string = random.randint( PyMatrix.min_lenth_string, PyMatrix.max_lenth_string )
+				property.speed = random.randint( PyMatrix.min_speed_symbol, PyMatrix.max_speed_symbol )
+			else:
+				property.pos_first_symbol += property.speed		
+			
+			
 	def _init_(self, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol, delay ):
 		PyMatrix.cols, PyMatrix.rows = shutil.get_terminal_size()
 		PyMatrix.min_lenth_string = min_lenth_string
@@ -78,14 +62,17 @@ class PyMatrix():
 		PyMatrix.min_speed_symbol = min_speed_symbol
 		PyMatrix.max_speed_symbol = max_speed_symbol
 		PyMatrix.delay = delay
-		PyMatrix.matrix = []
 
+		PyMatrix.matrix = []
 		for row in range(PyMatrix.rows): 								
 			PyMatrix.matrix.append([]) 									
 			for col in range(PyMatrix.cols): 							
 				PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
-		
-		Property.generate( PyMatrix.rows,  PyMatrix.cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol)
+
+		PyMatrix.properties = []
+		for i in range( PyMatrix.cols ):
+			PyMatrix.properties.append( Property( PyMatrix.rows, PyMatrix.cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol ) )
+			
 		PyMatrix.clear()
 	
 	def loop(self):
@@ -94,7 +81,7 @@ class PyMatrix():
 				self._init_(PyMatrix.min_lenth_string, PyMatrix.max_lenth_string, PyMatrix.min_speed_symbol, PyMatrix.max_speed_symbol,  PyMatrix.delay)
 			else:
 				PyMatrix.render()	
-				Property.update()
+				PyMatrix.update()
 				time.sleep(PyMatrix.delay)
 		PyMatrix.clear()
 	
