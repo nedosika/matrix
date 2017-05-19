@@ -3,7 +3,7 @@ import sys, os, random, string, time, shutil, termcolor
 	
 class Property():
 	def __init__( self, rows, cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol ):
-		self.pos_first_symbol = random.randint( -(rows), -10)
+		self.pos_first_symbol = random.randint( -(rows), 0)
 		self.size_string = random.randint( min_lenth_string, max_lenth_string )
 		self.speed = random.randint( min_speed_symbol, max_speed_symbol )
 	
@@ -15,6 +15,7 @@ class PyMatrix():
 	min_speed_symbol = 1
 	max_speed_symbol = 3
 	delay = 0
+	infliction = [['*','#','#','#','#'],['#','#','#','#','#'],['#','#','#','#','#'],['#','#','#','#','#'],['#','#','#','#','#']]
 
 	@staticmethod			
 	def render():
@@ -66,8 +67,14 @@ class PyMatrix():
 		PyMatrix.matrix = []
 		for row in range(PyMatrix.rows): 								
 			PyMatrix.matrix.append([]) 									
-			for col in range(PyMatrix.cols): 							
-				PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
+			for col in range(PyMatrix.cols):
+				if row < 5 and col < 5:
+					if PyMatrix.infliction[row][col] != " ":
+						PyMatrix.matrix[row].append(PyMatrix.infliction[row][col])
+					else:
+						PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
+				else:
+					PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
 
 		PyMatrix.properties = []
 		for i in range( PyMatrix.cols ):
@@ -83,5 +90,4 @@ class PyMatrix():
 				PyMatrix.render()	
 				PyMatrix.update()
 				time.sleep(PyMatrix.delay)
-		PyMatrix.clear()
 	
