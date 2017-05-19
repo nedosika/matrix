@@ -1,4 +1,4 @@
-﻿#Ver. 1.1a
+﻿#Ver. 1.2a
 import sys, os, random, string, time, shutil, termcolor
 	
 class Property():
