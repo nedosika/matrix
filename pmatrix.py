@@ -34,26 +34,26 @@ class Property():
 			else:
 				property.pos_first_symbol += property.speed
 
-class Matrix():
+class PyMatrix():
 
 	@staticmethod
 	def generate(rows, cols):
-		Matrix.rows = rows
-		Matrix.cols = cols
-		Matrix.matrix = []
+		PyMatrix.rows = rows
+		PyMatrix.cols = cols
+		PyMatrix.PyMatrix = []
 		for row in range(rows): 								
-			Matrix.matrix.append([]) 									
+			PyMatrix.PyMatrix.append([]) 									
 			for col in range(cols): 							
-				Matrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
+				PyMatrix.PyMatrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
 				
 	@staticmethod			
 	def render(properties):		
-		for row in range(Matrix.rows):
-			for col in range(Matrix.cols): 													
+		for row in range(PyMatrix.rows):
+			for col in range(PyMatrix.cols): 													
 				if row == properties[col].pos_first_symbol:
-					sys.stdout.write( termcolor.colored( Matrix.matrix[row][col], 'green', attrs=['bold', 'underline'] ) )
+					sys.stdout.write( termcolor.colored( PyMatrix.PyMatrix[row][col], 'green', attrs=['bold', 'underline'] ) )
 				elif row < properties[col].pos_first_symbol and row > properties[col].pos_first_symbol - properties[col].size_string:
-					sys.stdout.write( termcolor.colored( Matrix.matrix[row][col], 'green' ) )
+					sys.stdout.write( termcolor.colored( PyMatrix.PyMatrix[row][col], 'green' ) )
 				else:
 					sys.stdout.write( " " )
 
@@ -80,10 +80,10 @@ def loop():
 		if checkResize():
 			clear()
 			cols, rows = shutil.get_terminal_size()
-			Matrix.generate(rows, cols)
+			PyMatrix.generate(rows, cols)
 			Property.generate(rows, cols, MIN_LENTH_STRING, MAX_LENTH_STRING, MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
 		else:
-			Matrix.render(Property.properties)	
+			PyMatrix.render(Property.properties)	
 			Property.update()
 			time.sleep(DELAY)
 	clear()
@@ -96,7 +96,7 @@ DELAY = 0
 
 cols, rows = shutil.get_terminal_size()
 clear()
-Matrix.generate(rows, cols)
+PyMatrix.generate(rows, cols)
 Property.generate(rows, cols, MIN_LENTH_STRING, MAX_LENTH_STRING, MIN_SPEED_SYMBOL, MAX_SPEED_SYMBOL)
 loop()
 
