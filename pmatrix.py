@@ -14,7 +14,7 @@ class Property():
 		Property.min_speed_symbol = min_speed_symbol
 		Property.max_speed_symbol = max_speed_symbol
 		
-		self.pos_first_symbol = random.randint( 0, rows )
+		self.pos_first_symbol = random.randint( -(rows), -10)
 		self.size_string = random.randint( min_lenth_string, max_lenth_string )
 		self.speed = random.randint( min_speed_symbol, max_speed_symbol )
 	
@@ -37,19 +37,15 @@ class Property():
 class PyMatrix():
 	rows = 0
 	cols = 0
+	min_lenth_string = 4 
+	max_lenth_string = 20
+	min_speed_symbol = 1
+	max_speed_symbol = 3
+	delay = 0.4 
 
-	@staticmethod
-	def generate(rows, cols):
-		PyMatrix.rows = rows
-		PyMatrix.cols = cols
-		PyMatrix.matrix= []
-		for row in range(rows): 								
-			PyMatrix.matrix.append([]) 									
-			for col in range(cols): 							
-				PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
-				
 	@staticmethod			
-	def render(properties):		
+	def render():
+		properties = Property.properties
 		for row in range(PyMatrix.rows):
 			for col in range(PyMatrix.cols): 													
 				if row == properties[col].pos_first_symbol:
@@ -58,8 +54,6 @@ class PyMatrix():
 					sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green' ) )
 				else:
 					sys.stdout.write( " " )
-
-		#sys.stdout.flush() #При дбавлении перестает быть сильно заметен курсор)))
 		sys.stdout.write('\b' * PyMatrix.rows * PyMatrix.cols)
 	
 	@staticmethod
@@ -77,7 +71,7 @@ class PyMatrix():
 		else:
 			return True
 			
-	def _init_(self, min_lenth_string = 4, max_lenth_string = 20, min_speed_symbol = 1, max_speed_symbol = 3, delay = 0 ):
+	def _init_(self, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol, delay ):
 		PyMatrix.cols, PyMatrix.rows = shutil.get_terminal_size()
 		PyMatrix.min_lenth_string = min_lenth_string
 		PyMatrix.max_lenth_string = max_lenth_string
@@ -91,22 +85,16 @@ class PyMatrix():
 			for col in range(PyMatrix.cols): 							
 				PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
 		
-		Property.generate( PyMatrix.rows,  PyMatrix.cols, PyMatrix.min_lenth_string, PyMatrix.max_lenth_string, PyMatrix.min_speed_symbol, PyMatrix.max_speed_symbol)
+		Property.generate( PyMatrix.rows,  PyMatrix.cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol)
 		PyMatrix.clear()
 	
 	def loop(self):
 		while(True):
 			if PyMatrix.checkResize():
-				self._init_()
+				self._init_(PyMatrix.min_lenth_string, PyMatrix.max_lenth_string, PyMatrix.min_speed_symbol, PyMatrix.max_speed_symbol,  PyMatrix.delay)
 			else:
-				PyMatrix.render(Property.properties)	
+				PyMatrix.render()	
 				Property.update()
 				time.sleep(PyMatrix.delay)
 		PyMatrix.clear()
-
-matrix = PyMatrix()
-matrix.loop()
-
-
-
 	
