@@ -68,13 +68,7 @@ class PyMatrix():
 		for row in range(PyMatrix.rows): 								
 			PyMatrix.matrix.append([]) 									
 			for col in range(PyMatrix.cols):
-				if row < 5 and col < 5:
-					if PyMatrix.infliction[row][col] != " ":
-						PyMatrix.matrix[row].append(PyMatrix.infliction[row][col])
-					else:
-						PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
-				else:
-					PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
+				PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
 
 		PyMatrix.properties = []
 		for i in range( PyMatrix.cols ):
