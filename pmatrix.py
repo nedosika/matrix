@@ -15,7 +15,6 @@ class PyMatrix():
 	min_speed_symbol = 1
 	max_speed_symbol = 3
 	delay = 0
-	infliction = [['*','#','#','#','#'],['#','#','#','#','#'],['#','#','#','#','#'],['#','#','#','#','#'],['#','#','#','#','#']]
 
 	@staticmethod			
 	def render():
