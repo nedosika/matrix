@@ -15,14 +15,22 @@ class PyMatrix():
 	min_speed_symbol = 1
 	max_speed_symbol = 3
 	delay = 0
-	infliction = [['*','#','#','#','#'],['#','#','#','#','#'],['#','#','#','#','#'],['#','#','#','#','#'],['#','#','#','#','#']]
 
 	@staticmethod			
 	def render():
 		properties = PyMatrix.properties
 		for row in range(PyMatrix.rows):
-			for col in range(PyMatrix.cols): 													
-				if row == properties[col].pos_first_symbol:
+			for col in range(PyMatrix.cols): 
+				if row < PyMatrix.irow and col < PyMatrix.icol:
+					if PyMatrix.infliction[row][col] == "#":
+						sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green', attrs=['bold'] ) )
+					elif row == properties[col].pos_first_symbol:
+						sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green', attrs=['bold', 'underline'] ) )
+					elif row < properties[col].pos_first_symbol and row > properties[col].pos_first_symbol - properties[col].size_string:
+						sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green' ) )
+					else:
+						sys.stdout.write( " " )
+				elif row == properties[col].pos_first_symbol:
 					sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green', attrs=['bold', 'underline'] ) )
 				elif row < properties[col].pos_first_symbol and row > properties[col].pos_first_symbol - properties[col].size_string:
 					sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green' ) )
@@ -74,6 +82,17 @@ class PyMatrix():
 		for i in range( PyMatrix.cols ):
 			PyMatrix.properties.append( Property( PyMatrix.rows, PyMatrix.cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol ) )
 			
+		PyMatrix.infliction = []
+		PyMatrix.irow = 0
+		f = open('matrix.txt', 'r')
+		for line in f:
+			PyMatrix.infliction.append(list(line))
+			PyMatrix.irow += 1
+		PyMatrix.icol = len(line) - 1
+		
+		print(PyMatrix.irow, PyMatrix.icol)
+		print(PyMatrix.infliction)
+		time.sleep(4)
 		PyMatrix.clear()
 	
 	def loop(self):
