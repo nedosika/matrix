@@ -14,6 +14,7 @@ class PyMatrix():
 	max_lenth_string = 20
 	min_speed_symbol = 1
 	max_speed_symbol = 3
+	color = "green"
 	delay = 0
 
 	@staticmethod			
