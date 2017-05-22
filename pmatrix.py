@@ -1,5 +1,5 @@
 ﻿#Ver. 1.3a
-import sys, os, random, string, time, shutil, termcolor
+import sys, os, random, string, time, shutil, termcolor, argparse
 	
 class Property():
 	def __init__( self, rows, cols, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol ):
@@ -22,9 +22,9 @@ class PyMatrix():
 		for row in range(PyMatrix.rows):
 			for col in range(PyMatrix.cols): 													
 				if row == properties[col].pos_first_symbol:
-					sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green', attrs=['bold', 'underline'] ) )
+					sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], PyMatrix.color, attrs=['bold', 'underline'] ) )
 				elif row < properties[col].pos_first_symbol and row > properties[col].pos_first_symbol - properties[col].size_string:
-					sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], 'green' ) )
+					sys.stdout.write( termcolor.colored( PyMatrix.matrix[row][col], PyMatrix.color ) )
 				else:
 					sys.stdout.write( " " )
 		sys.stdout.write('\b' * PyMatrix.rows * PyMatrix.cols)
@@ -54,7 +54,6 @@ class PyMatrix():
 			else:
 				property.pos_first_symbol += property.speed		
 			
-			
 	def _init_(self, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol, delay ):
 		PyMatrix.cols, PyMatrix.rows = shutil.get_terminal_size()
 		PyMatrix.min_lenth_string = min_lenth_string
@@ -83,4 +82,24 @@ class PyMatrix():
 				PyMatrix.render()	
 				PyMatrix.update()
 				time.sleep(PyMatrix.delay)
+
+def createParser ():
+	parser = argparse.ArgumentParser()
+	parser.add_argument ('-d', '--delay', type = int, default = 4, choices=[1, 2, 3, 4])
+	parser.add_argument ('-c', '--color', type = str, default = 'green', choices=['green', 'red', 'blue', 'white'])
+	parser.add_argument ('-s', '--speed', type = int, default = 1)
+	parser.add_argument ('-u', '--underline', type=bool, default = True)
+	
+ 
+	return parser
+		
+if __name__ == "__main__":
+	parser = createParser()
+	namespace = parser.parse_args(sys.argv[1:])
+	PyMatrix.delay = namespace.delay * 0.1
+	PyMatrix.color = namespace.color
+	PyMatrix().loop()
+	
+	
+	
 	
