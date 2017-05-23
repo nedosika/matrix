@@ -10,94 +10,90 @@ class Property():
 		self.speed = random.randint( min_speed_symbol, max_speed_symbol )
 	
 class PyMatrix():
-
-	@staticmethod			
-	def render():
-		properties = PyMatrix.properties
-		for row in range(PyMatrix.rows):
-			for col in range(PyMatrix.cols): 													
+			
+	def render(self):
+		properties = self.properties
+		for row in range(self.rows):
+			for col in range(self.cols): 													
 				if row == properties[col].pos_first_symbol:
 					sys.stdout.write( 
 						termcolor.colored(
-							PyMatrix.matrix[row][col], 
-							PyMatrix.color, 
-							attrs = PyMatrix.attrs ) )
+							self.matrix[row][col], 
+							self.color, 
+							attrs = self.attrs ) )
 				elif row < properties[col].pos_first_symbol and row > properties[col].pos_first_symbol - properties[col].size_string:
 					sys.stdout.write(
 						termcolor.colored(
-							PyMatrix.matrix[row][col],
-							PyMatrix.color ) )
+							self.matrix[row][col],
+							self.color ) )
 				else:
 					sys.stdout.write( " " )
-		sys.stdout.write('\b' * PyMatrix.rows * PyMatrix.cols)
-	
-	@staticmethod
-	def clear():
+		sys.stdout.write('\b' * self.rows * self.cols)
+
+	def clear(self):
 		if sys.platform == 'win32':								
 			os.system('cls')
 		else:
 			os.system('clear')
 
-	@staticmethod
-	def checkResize():
+	def checkResize(self):
 		new_cols, new_rows = shutil.get_terminal_size()	
-		if (PyMatrix.rows == new_rows and PyMatrix.cols == new_cols):
+		if (self.rows == new_rows and self.cols == new_cols):
 			return False
 		else:
 			return True
-			
-	@staticmethod		
-	def update():
-		for property in PyMatrix.properties:
-			if property.pos_first_symbol - property.size_string > PyMatrix.rows:
-				property.pos_first_symbol = 0
-				property.size_string = random.randint(PyMatrix.min_lenth_string, PyMatrix.max_lenth_string)
-				property.speed = random.randint(PyMatrix.min_speed_symbol, PyMatrix.max_speed_symbol)
-			else:
-				property.pos_first_symbol += property.speed		
+	
+	def update(self):
+		if self.checkResize():
+			self.__init__(
+				self.min_lenth_string, 
+				self.max_lenth_string, 
+				self.min_speed_symbol, 
+				self.max_speed_symbol, 
+				self.delay, 
+				self.color, 
+				self.attrs)
+		else:
+			for property in self.properties:
+				if property.pos_first_symbol - property.size_string > self.rows:
+					property.pos_first_symbol = 0
+					property.size_string = random.randint(self.min_lenth_string, self.max_lenth_string)
+					property.speed = random.randint(self.min_speed_symbol, self.max_speed_symbol)
+				else:
+					property.pos_first_symbol += property.speed		
 			
 	def __init__(self, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol, delay, color, attrs):
-		PyMatrix.cols, PyMatrix.rows = shutil.get_terminal_size()
-		PyMatrix.min_lenth_string = min_lenth_string
-		PyMatrix.max_lenth_string = max_lenth_string
-		PyMatrix.min_speed_symbol = min_speed_symbol
-		PyMatrix.max_speed_symbol = max_speed_symbol
-		PyMatrix.delay = delay
-		PyMatrix.color = color
-		PyMatrix.attrs = attrs
+		self.cols, self.rows = shutil.get_terminal_size()
+		self.min_lenth_string = min_lenth_string
+		self.max_lenth_string = max_lenth_string
+		self.min_speed_symbol = min_speed_symbol
+		self.max_speed_symbol = max_speed_symbol
+		self.delay = delay
+		self.color = color
+		self.attrs = attrs
 
-		PyMatrix.matrix = []
-		for row in range(PyMatrix.rows): 								
-			PyMatrix.matrix.append([]) 									
-			for col in range(PyMatrix.cols):
-				PyMatrix.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
+		self.matrix = []
+		for row in range(self.rows): 								
+			self.matrix.append([]) 									
+			for col in range(self.cols):
+				self.matrix[row].append(random.choice(string.digits + string.ascii_letters + string.punctuation))
 
-		PyMatrix.properties = []
-		for i in range(PyMatrix.cols):
-			PyMatrix.properties.append( Property( 
-											PyMatrix.rows, 
-											PyMatrix.cols, 
+		self.properties = []
+		for i in range(self.cols):
+			self.properties.append( Property( 
+											self.rows, 
+											self.cols, 
 											min_lenth_string, 
 											max_lenth_string, 
 											min_speed_symbol, 
 											max_speed_symbol ) )
-		PyMatrix.clear()
+		self.clear()
 	
 	def loop(self):
 		while(True):
-			if PyMatrix.checkResize():
-				self.__init__(
-					PyMatrix.min_lenth_string, 
-					PyMatrix.max_lenth_string, 
-					PyMatrix.min_speed_symbol, 
-					PyMatrix.max_speed_symbol, 
-					PyMatrix.delay, 
-					PyMatrix.color, 
-					PyMatrix.attrs)
-			else:
-				PyMatrix.update()
-				PyMatrix.render()	
-				time.sleep(PyMatrix.delay)
+			self.update()
+			self.render()	
+			time.sleep(self.delay)
 
 def createParser ():
 	parser = argparse.ArgumentParser(
@@ -154,6 +150,7 @@ def main():
 		attrs = ['bold', 'underline']
 	else:
 		attrs = ['bold']
+
 	PyMatrix(5, 20, 1, 3, namespace.delay * 0.1, namespace.color, attrs).loop()
 		
 if __name__ == "__main__":
