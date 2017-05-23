@@ -8,15 +8,6 @@ class Property():
 		self.speed = random.randint( min_speed_symbol, max_speed_symbol )
 	
 class PyMatrix():
-	rows = 0
-	cols = 0
-	min_lenth_string = 4 
-	max_lenth_string = 20
-	min_speed_symbol = 1
-	max_speed_symbol = 3
-	color = "green"
-	delay = 0
-	attrs = ['bold']
 
 	@staticmethod			
 	def render():
@@ -89,21 +80,19 @@ class PyMatrix():
 
 def createParser ():
 	parser = argparse.ArgumentParser()
-	parser.add_argument ('-d', '--delay', type = int, default = 4, choices=[0, 1, 2, 3, 4])
-	parser.add_argument ('-c', '--color', type = str, default = 'green', choices=['green', 'red', 'blue', 'white'])
-	parser.add_argument ('-u', '--underline', action='store_const', const = True)
+	parser.add_argument ('-d', '--delay', type = int, default = 4, choices = [0, 1, 2, 3, 4])
+	parser.add_argument ('-c', '--color', type = str, default = 'green', choices = ['green', 'red', 'blue', 'white', 'yellow'])
+	parser.add_argument ('-u', '--underline', action = 'store_const', const = True, default = False)
 
 	return parser
 	
 def main():
 	parser = createParser()
 	namespace = parser.parse_args(sys.argv[1:])
-
 	if namespace.underline:
 		attrs = ['bold', 'underline']
 	else:
 		attrs = ['bold']
-		
 	PyMatrix(5, 15, 1, 3, namespace.delay * 0.1, namespace.color, attrs).loop()
 		
 if __name__ == "__main__":
