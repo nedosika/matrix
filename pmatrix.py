@@ -10,7 +10,6 @@ class Property():
 		self.speed = random.randint( min_speed_symbol, max_speed_symbol )
 	
 class PyMatrix():
-			
 	def render(self):
 		properties = self.properties
 		for row in range(self.rows):
@@ -19,7 +18,7 @@ class PyMatrix():
 					sys.stdout.write( 
 						termcolor.colored(
 							self.matrix[row][col], 
-							self.color, 
+							self.first_symbol, 
 							attrs = self.attrs ) )
 				elif row < properties[col].pos_first_symbol and row > properties[col].pos_first_symbol - properties[col].size_string:
 					sys.stdout.write(
@@ -51,7 +50,8 @@ class PyMatrix():
 				self.min_speed_symbol, 
 				self.max_speed_symbol, 
 				self.delay, 
-				self.color, 
+				self.color,
+				self.first_symbol,
 				self.attrs)
 		else:
 			for property in self.properties:
@@ -62,7 +62,7 @@ class PyMatrix():
 				else:
 					property.pos_first_symbol += property.speed		
 			
-	def __init__(self, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol, delay, color, attrs):
+	def __init__(self, min_lenth_string, max_lenth_string, min_speed_symbol, max_speed_symbol, delay, color, first_symbol, attrs):
 		self.cols, self.rows = shutil.get_terminal_size()
 		self.min_lenth_string = min_lenth_string
 		self.max_lenth_string = max_lenth_string
@@ -70,6 +70,7 @@ class PyMatrix():
 		self.max_speed_symbol = max_speed_symbol
 		self.delay = delay
 		self.color = color
+		self.first_symbol = first_symbol
 		self.attrs = attrs
 
 		self.matrix = []
@@ -83,10 +84,10 @@ class PyMatrix():
 			self.properties.append( Property( 
 											self.rows, 
 											self.cols, 
-											min_lenth_string, 
-											max_lenth_string, 
-											min_speed_symbol, 
-											max_speed_symbol ) )
+											self.min_lenth_string, 
+											self.max_lenth_string, 
+											self.min_speed_symbol, 
+											self.max_speed_symbol ) )
 		self.clear()
 	
 	def loop(self):
@@ -151,7 +152,7 @@ def main():
 	else:
 		attrs = ['bold']
 
-	PyMatrix(5, 20, 1, 3, namespace.delay * 0.1, namespace.color, attrs).loop()
+	PyMatrix(5, 20, 1, 3, namespace.delay * 0.1, namespace.color, namespace.first_symbol, attrs).loop()
 		
 if __name__ == "__main__":
 	main()
