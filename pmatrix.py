@@ -85,11 +85,40 @@ def createParser ():
 		prog = 'pmatrix',
 		description = '''Программа, которая создает эффект матрицы.''',
 		epilog = '''(c) Pavel Nedosika 2017.''')
-	parser.add_argument ('-d', '--delay', type = int, default = 4, choices = [0, 1, 2, 3, 4], help = 'Скорость обновления матрицы')
-	parser.add_argument ('-c', '--color', type = str, default = 'green', choices = ['green', 'red', 'blue', 'white', 'yellow'], help = 'Цвет всей матрицы')
-	parser.add_argument ('-C', type = str, default = 'green', choices = ['green', 'red', 'blue', 'white', 'yellow'], help = 'Цвет первой буквы в строках матрицы')
-	parser.add_argument ('-u', '--underline', action = 'store_const', const = True, default = False, help = 'Подчеркивание первой буквы в строках матрицы')
-	parser.add_argument ('-v', '--version', action='version', help = 'Вывести номер версии', version='%(prog)s {}'.format (version))
+		
+	parser.add_argument (
+		'-d', '--delay', 
+		type = int, 
+		default = 4, 
+		choices = [0, 1, 2, 3, 4], 
+		help = 'Скорость обновления матрицы')
+		
+	parser.add_argument (
+		'-c', '--color', 
+		type = str, 
+		default = 'green', 
+		choices = ['green', 'red', 'blue', 'white', 'yellow'], 
+		help = 'Цвет всей матрицы')
+		
+	parser.add_argument (
+		'-C', 
+		type = str, 
+		default = 'green', 
+		choices = ['green', 'red', 'blue', 'white', 'yellow'], 
+		help = 'Цвет первой буквы в строках матрицы')
+		
+	parser.add_argument (
+		'-u', '--underline', 
+		action = 'store_const', 
+		const = True, 
+		default = False, 
+		help = 'Подчеркивание первой буквы в строках матрицы')
+		
+	parser.add_argument (
+		'-v', '--version', 
+		action='version', 
+		help = 'Вывести номер версии', 
+		version='%(prog)s {}'.format (version))
 	return parser
 	
 def main():
